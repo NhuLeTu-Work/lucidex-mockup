@@ -76,15 +76,62 @@ export interface HRVerifyEntry {
   method: 'link' | 'portal';
 }
 
+// Thêm registrationData vào interface Account
 export interface Account {
   id: string;
   name: string;
   email: string;
   type: 'student' | 'issuer' | 'hr' | 'admin';
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'pending' | 'setup_required' | 'rejected';
   createdAt: string;
   lastActive: string;
+  registrationData?: {
+    orgName: string;
+    taxCode: string;
+    address: string;
+    legalRep: string;
+    contactPhone: string;
+    regName: string;
+    regTitle?: string;
+    submittedAt: string;
+    rejectedReason?: string;
+  };
 }
+
+// Thay thế mảng mockAccounts hiện tại bằng mảng này để có đủ 6 tài khoản Issuer/Verifier test các trạng thái
+export const mockAccounts: Account[] = [
+  // 1. TÀI KHOẢN ADMIN & STUDENT (Active bình thường)
+  { id: 'acc_001', name: 'System Admin', email: 'admin@credentwin.vn', type: 'admin', status: 'active', createdAt: '2026-01-01T00:00:00Z', lastActive: '2026-06-17T09:00:00Z' },
+  { id: 'acc_002', name: 'Nguyen Van A', email: 'b190001@student.ctu.edu.vn', type: 'student', status: 'active', createdAt: '2026-03-01T00:00:00Z', lastActive: '2026-06-16T20:00:00Z' },
+
+  // 2. ISSUER (3 Trạng thái)
+  { 
+    id: 'iss_001', name: 'ĐH Cần Thơ (Pending)', email: 'pending@ctu.edu.vn', type: 'issuer', status: 'pending', createdAt: '2026-07-09T00:00:00Z', lastActive: '',
+    registrationData: { orgName: 'Đại học Cần Thơ', taxCode: '1800156840', address: 'Khu II, Đ. 3/2, Xuân Khánh, Ninh Kiều, Cần Thơ', legalRep: 'Tran Viet Truong', contactPhone: '02923832663', regName: 'Nguyen Van Issuer', submittedAt: '2026-07-09T14:30:00Z' }
+  },
+  { 
+    id: 'iss_002', name: 'ĐH Cần Thơ (Approved)', email: 'approved@ctu.edu.vn', type: 'issuer', status: 'setup_required', createdAt: '2026-07-08T00:00:00Z', lastActive: '',
+    registrationData: { orgName: 'Đại học Cần Thơ', taxCode: '1800156840', address: 'Khu II, Đ. 3/2, Xuân Khánh, Cần Thơ', legalRep: 'Tran Viet Truong', contactPhone: '02923832663', regName: 'Nguyen Van Issuer', submittedAt: '2026-07-08T09:00:00Z' }
+  },
+  { 
+    id: 'iss_003', name: 'ĐH Cần Thơ (Rejected)', email: 'rejected@ctu.edu.vn', type: 'issuer', status: 'rejected', createdAt: '2026-07-07T00:00:00Z', lastActive: '',
+    registrationData: { orgName: 'Đại học Cần Thơ Fake', taxCode: '0000000000', address: 'Địa chỉ giả', legalRep: 'Kẻ mạo danh', contactPhone: '0123456789', regName: 'Scammer', submittedAt: '2026-07-07T10:00:00Z', rejectedReason: 'Mã số thuế không tồn tại trên hệ thống Đăng ký kinh doanh Quốc gia.' }
+  },
+
+  // 3. VERIFIER / HR (3 Trạng thái)
+  { 
+    id: 'hr_001', name: 'FPT Software (Pending)', email: 'pending@fpt.com', type: 'hr', status: 'pending', createdAt: '2026-07-09T00:00:00Z', lastActive: '',
+    registrationData: { orgName: 'FPT Software Can Tho', taxCode: '0302161475', address: 'Số 1, Đường D1, Khu CNC', legalRep: 'Hoang Nam', contactPhone: '0901234567', regName: 'Le Thi HR', regTitle: 'HR Manager', submittedAt: '2026-07-09T15:00:00Z' }
+  },
+  { 
+    id: 'hr_002', name: 'FPT Software (Approved)', email: 'approved@fpt.com', type: 'hr', status: 'setup_required', createdAt: '2026-07-08T00:00:00Z', lastActive: '',
+    registrationData: { orgName: 'FPT Software Can Tho', taxCode: '0302161475', address: 'Số 1, Đường D1, Khu CNC', legalRep: 'Hoang Nam', contactPhone: '0901234567', regName: 'Le Thi HR', regTitle: 'HR Manager', submittedAt: '2026-07-08T11:00:00Z' }
+  },
+  { 
+    id: 'hr_003', name: 'FPT Software (Rejected)', email: 'rejected@fpt.com', type: 'hr', status: 'rejected', createdAt: '2026-07-07T00:00:00Z', lastActive: '',
+    registrationData: { orgName: 'Công ty Ma', taxCode: '9999999999', address: 'Không rõ', legalRep: 'Vô danh', contactPhone: '0999999999', regName: 'Hacker', regTitle: 'Boss', submittedAt: '2026-07-07T14:00:00Z', rejectedReason: 'Giấy phép kinh doanh tải lên bị mờ, không thể xác thực thông tin pháp lý.' }
+  },
+];
 
 // Mock Students
 export const mockStudents: Student[] = [
@@ -142,16 +189,6 @@ export const mockHRVerifyHistory: HRVerifyEntry[] = [
   { id: 'hrv_002', credentialId: 'cred_002', studentName: 'Tran Thi B', institution: 'CICT - Can Tho University', major: 'Software Engineering', result: 'valid', timestamp: '2026-06-14T14:20:00Z', method: 'portal' },
   { id: 'hrv_003', credentialId: 'cred_004', studentName: 'Pham Thi D', institution: 'CICT - Can Tho University', major: 'Computer Science', result: 'valid', timestamp: '2026-06-09T08:15:00Z', method: 'portal' },
   { id: 'hrv_004', credentialId: 'cred_001', studentName: 'Nguyen Van A', institution: 'CICT - Can Tho University', major: 'Computer Science', result: 'valid', timestamp: '2026-06-08T11:00:00Z', method: 'link' },
-];
-
-// Mock Accounts
-export const mockAccounts: Account[] = [
-  { id: 'acc_001', name: 'Phong Dao tao CICT', email: 'daotao@cict.ctu.edu.vn', type: 'issuer', status: 'active', createdAt: '2026-01-15T00:00:00Z', lastActive: '2026-06-17T08:00:00Z' },
-  { id: 'acc_002', name: 'Nguyen Van A', email: 'b190001@student.ctu.edu.vn', type: 'student', status: 'active', createdAt: '2026-03-01T00:00:00Z', lastActive: '2026-06-16T20:00:00Z' },
-  { id: 'acc_003', name: 'Tran Thi HR', email: 'hr@tma.com.vn', type: 'hr', status: 'active', createdAt: '2026-04-10T00:00:00Z', lastActive: '2026-06-15T14:00:00Z' },
-  { id: 'acc_004', name: 'System Admin', email: 'admin@credentwin.vn', type: 'admin', status: 'active', createdAt: '2026-01-01T00:00:00Z', lastActive: '2026-06-17T09:00:00Z' },
-  { id: 'acc_005', name: 'Tran Thi B', email: 'b190002@student.ctu.edu.vn', type: 'student', status: 'active', createdAt: '2026-03-05T00:00:00Z', lastActive: '2026-06-14T10:00:00Z' },
-  { id: 'acc_006', name: 'FPT Software HR', email: 'hr@fptsoftware.ct', type: 'hr', status: 'inactive', createdAt: '2026-06-16T00:00:00Z', lastActive: '2026-06-16T08:00:00Z' },
 ];
 
 // Analytics Data

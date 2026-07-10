@@ -101,9 +101,12 @@ export interface Account {
 // Thay thế mảng mockAccounts hiện tại bằng mảng này để có đủ 6 tài khoản Issuer/Verifier test các trạng thái
 export const mockAccounts: Account[] = [
   // 1. TÀI KHOẢN ADMIN & STUDENT (Active bình thường)
-  { id: 'acc_001', name: 'System Admin', email: 'admin@credentwin.vn', type: 'admin', status: 'active', createdAt: '2026-01-01T00:00:00Z', lastActive: '2026-06-17T09:00:00Z' },
+  { id: 'acc_001', name: 'System Admin', email: 'admin@lucidex.vn', type: 'admin', status: 'active', createdAt: '2026-01-01T00:00:00Z', lastActive: '2026-06-17T09:00:00Z' },
   { id: 'acc_002', name: 'Nguyen Van A', email: 'b190001@student.ctu.edu.vn', type: 'student', status: 'active', createdAt: '2026-03-01T00:00:00Z', lastActive: '2026-06-16T20:00:00Z' },
 
+  { id: 'iss_004', name: 'Phong Dao tao CICT', email: 'daotao@cict.ctu.edu.vn', type: 'issuer', status: 'active', createdAt: '2026-01-15T00:00:00Z', lastActive: '2026-06-17T08:00:00Z' },
+  { id: 'hr_004', name: 'Tran Thi HR', email: 'hr@tma.com.vn', type: 'hr', status: 'active', createdAt: '2026-04-10T00:00:00Z', lastActive: '2026-06-15T14:00:00Z' },
+  { id: 'hr_005', name: 'FPT Software HR', email: 'hr@fptsoftware.ct', type: 'hr', status: 'inactive', createdAt: '2026-06-16T00:00:00Z', lastActive: '2026-06-16T08:00:00Z' },
   // 2. ISSUER (3 Trạng thái)
   { 
     id: 'iss_001', name: 'ĐH Cần Thơ (Pending)', email: 'pending@ctu.edu.vn', type: 'issuer', status: 'pending', createdAt: '2026-07-09T00:00:00Z', lastActive: '',

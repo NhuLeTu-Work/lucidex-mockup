@@ -50,6 +50,7 @@ export function OtpModal({ email, otpValue, setOtpValue, otpError, isOtpLoading,
             type="text" 
             value={otpValue} 
             onChange={e => setOtpValue(e.target.value.replace(/[^0-9]/g, ''))} 
+            onFocus={(e) => e.target.select()} // Bôi đen text cũ khi focus lại để dễ dàng gõ đè OTP mới
             placeholder="000000" 
             maxLength={6} 
             disabled={isOtpLoading}

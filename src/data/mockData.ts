@@ -82,6 +82,7 @@ export interface Account {
   name: string;
   email: string;
   type: 'owner' | 'issuer' | 'verifier' | 'admin';
+  authProvider?: 'password' | 'google';
   status: 'active' | 'inactive' | 'pending' | 'setup_required' | 'rejected';
   createdAt: string;
   lastActive: string;
@@ -102,7 +103,8 @@ export interface Account {
 export const mockAccounts: Account[] = [
   // 1. TÀI KHOẢN ADMIN & STUDENT (Active bình thường)
   { id: 'acc_001', name: 'System Admin', email: 'admin@lucidex.vn', type: 'admin', status: 'active', createdAt: '2026-01-01T00:00:00Z', lastActive: '2026-06-17T09:00:00Z' },
-  { id: 'acc_002', name: 'Nguyen Van A', email: 'b190001@student.ctu.edu.vn', type: 'owner', status: 'active', createdAt: '2026-03-01T00:00:00Z', lastActive: '2026-06-16T20:00:00Z' },
+  { id: 'acc_002', name: 'Nguyen Van A', email: 'b190001@student.ctu.edu.vn', type: 'owner', authProvider: 'password',status: 'active', createdAt: '2026-03-01T00:00:00Z', lastActive: '2026-06-16T20:00:00Z' },
+  { id: 'acc_003', name: 'Nguyen Van B', email: 'b190002@student.ctu.edu.vn', type: 'owner', authProvider: 'google',status: 'active', createdAt: '2026-03-01T00:00:00Z', lastActive: '2026-06-16T20:00:00Z' },
 
   { id: 'iss_004', name: 'Phong Dao tao CICT', email: 'daotao@cict.ctu.edu.vn', type: 'issuer', status: 'active', createdAt: '2026-01-15T00:00:00Z', lastActive: '2026-06-17T08:00:00Z' },
   { id: 'vef_004', name: 'Tran Thi HR', email: 'hr@tma.com.vn', type: 'verifier', status: 'active', createdAt: '2026-04-10T00:00:00Z', lastActive: '2026-06-15T14:00:00Z' },

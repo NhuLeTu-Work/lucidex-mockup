@@ -298,4 +298,13 @@ export const en: Record<string, string> = {
     "lblThisIsIssuer": "This is our Issuer",
     "lblThisIsOwner": "This is our Owner",
     "lblThisIsVerifier": "This is our Verifier",
+    resendIn: "Resend in",
+    otpResendSuccess: "A new code has been sent.",
+    otpRateLimitError: "Too many attempts. Please try again later.",
+    otpSwitchCooldownError: "Please wait for cooldown before switching again.",
+    otpResent: "A new code has been sent.",
+    errorTooManyAttempts: "Too many attempts. Please try again in 5 minutes.",
+    errorSwitchCooldown: "Please wait for cooldown before switching again.",
+    errorEmailExistsGoogle: "This email is already registered via Google. Please log in using Google.",
+    errorEmailExistsPassword: "This email is already registered with a password. Please log in using your email and password.",
 };

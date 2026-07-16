@@ -283,4 +283,13 @@ export const vi: Record<string, string> = {
     "lblThisIsIssuer": "Đây chính là Tổ chức cấp phát",
     "lblThisIsOwner": "Đây chính là Chủ sở hữu",
     "lblThisIsVerifier": "Đây chính là Nhà tuyển dụng",
+    resendIn: "Gửi lại sau",
+    otpResendSuccess: "Một mã xác thực mới vừa được gửi.",
+    otpRateLimitError: "Bạn đã thao tác quá nhiều lần. Vui lòng thử lại sau vài phút.",
+    otpSwitchCooldownError: "Vui lòng đợi reset cooldown trước khi đổi phương thức xác thực.",
+    otpResent: "Một mã xác thực mới vừa được gửi.",
+    errorTooManyAttempts: "Bạn đã thao tác quá nhiều lần. Vui lòng thử lại sau 5 phút.",
+    errorSwitchCooldown: "Vui lòng đợi reset cooldown trước khi đổi phương thức khác.",
+    errorEmailExistsGoogle: "Email này đã được đăng ký qua Google. Vui lòng đăng nhập bằng Google.",
+    errorEmailExistsPassword: "Email này đã được đăng ký bằng mật khẩu. Vui lòng đăng nhập bằng email và mật khẩu của bạn.",
 };

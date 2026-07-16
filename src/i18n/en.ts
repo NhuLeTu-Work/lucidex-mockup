@@ -267,7 +267,7 @@ export const en: Record<string, string> = {
     "backToHome": "Back to Home",
     
     "setupAccountTitle": "Set Up Your Account",
-    "setupAccountDesc": "Please set a secure password for your newly approved account.",
+    "setupAccountDesc": "Your registeration has been approved. Please set a secure password for your newly approved account.",
     "setupAccountBtn": "Complete Setup",
     "setupSuccessTitle": "Account Created!",
     "setupSuccessDesc": "Redirecting to mandatory 2FA setup...",

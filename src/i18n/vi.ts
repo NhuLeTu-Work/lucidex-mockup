@@ -251,7 +251,7 @@ export const vi: Record<string, string> = {
     "backToHome": "Quay về trang chủ",
     
     "setupAccountTitle": "Thiết lập tài khoản",
-    "setupAccountDesc": "Vui lòng thiết lập một mật khẩu an toàn cho tài khoản vừa được phê duyệt của bạn.",
+    "setupAccountDesc": "Yêu cầu tạo tài khoản của bạn đã được duyệt. Vui lòng thiết lập một mật khẩu an toàn cho tài khoản vừa được phê duyệt của bạn.",
     "setupAccountBtn": "Hoàn tất thiết lập",
     "setupSuccessTitle": "Tạo tài khoản thành công!",
     "setupSuccessDesc": "Đang chuyển hướng đến trang thiết lập 2FA bắt buộc...",

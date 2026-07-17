@@ -237,7 +237,8 @@ export const vi: Record<string, string> = {
     fmtPhone: 'Số điện thoại Việt Nam gồm 10 chữ số',
     
     applicationSubmitted: 'Gửi yêu cầu thành công',
-    pendingReviewMsg: 'Đơn đăng ký của bạn đã được gửi thành công và đang chờ ban quản trị phê duyệt.',
+    pendingReviewMsgIssuer: 'Đơn đăng ký của bạn cho Tổ chức cấp phát đã được gửi thành công và đang chờ ban quản trị phê duyệt.',
+    pendingReviewMsgVerifier: 'Đơn đăng ký của bạn cho Doanh nghiệp/Nhà tuyển dụng đã được gửi thành công và đang chờ ban quản trị phê duyệt.',
     returnHome: 'Quay về trang chủ',
 
     "submittedAt": "Ngày nộp đơn",
@@ -292,4 +293,9 @@ export const vi: Record<string, string> = {
     errorSwitchCooldown: "Vui lòng đợi reset cooldown trước khi đổi phương thức khác.",
     errorEmailExistsGoogle: "Email này đã được đăng ký qua Google. Vui lòng đăng nhập bằng Google.",
     errorEmailExistsPassword: "Email này đã được đăng ký bằng mật khẩu. Vui lòng đăng nhập bằng email và mật khẩu của bạn.",
+    setupGoogleAuthTitle: "Cài đặt Ứng dụng xác thực",
+    loginGoogleAuthTitle: "Ứng dụng xác thực",
+    setupGoogleAuthDesc: "Quét mã QR bằng ứng dụng Authenticator của bạn và nhập mã 6 số xuống bên dưới.",
+    loginGoogleAuthDesc: "Mở ứng dụng xác thực (ví dụ: Google Authenticator) và nhập mã 6 số xuống bên dưới.",
+    errorTotpInvalid: "Mã xác thực không hợp lệ hoặc đã hết hạn.",
 };

@@ -253,6 +253,8 @@ export const en: Record<string, string> = {
     
     applicationSubmitted: 'Application Submitted',
     pendingReviewMsg: 'Your registration application has been submitted successfully and is pending review.',
+    pendingReviewMsgIssuer: 'Your registration application for Issuer has been submitted successfully and is pending review.',
+    pendingReviewMsgVerifier: 'Your registration application for Verifier has been submitted successfully and is pending review.',
     returnHome: 'Return to Home',
     verify2FA: '2FA Verify',
     
@@ -307,4 +309,9 @@ export const en: Record<string, string> = {
     errorSwitchCooldown: "Please wait for cooldown before switching again.",
     errorEmailExistsGoogle: "This email is already registered via Google. Please log in using Google.",
     errorEmailExistsPassword: "This email is already registered with a password. Please log in using your email and password.",
+    setupGoogleAuthTitle: "Setup Authenticator",
+    loginGoogleAuthTitle: "Authenticator App",
+    setupGoogleAuthDesc: "Scan the QR code with your Authenticator app and enter the 6-digit code.",
+    loginGoogleAuthDesc: "Open your Authenticator app and enter the 6-digit code.",
+    errorTotpInvalid: "Invalid code or code has expired.",
 };

@@ -23,13 +23,16 @@ export function Register() {
         
         <div className="p-8 rounded-2xl border shadow-xl flex flex-col gap-6 transition-all" style={{ borderColor: 'var(--ct-border)', background: 'var(--ct-surface)' }}>
           
-          <RoleSelector 
-            roleType={roleType} 
-            handleRoleChange={handleRoleChange} 
-            isSuccess={isSuccess} 
-            getSubtitle={getSubtitle} 
-            t={t} 
-          />
+          {/* Ẩn toàn bộ phần Header/Dropdown khi isSuccess === true */}
+          {!isSuccess && (
+            <RoleSelector 
+              roleType={roleType} 
+              handleRoleChange={handleRoleChange} 
+              isSuccess={isSuccess} 
+              getSubtitle={getSubtitle} 
+              t={t} 
+            />
+          )}
 
           {error && (
             <div className="p-3.5 rounded-xl border flex items-start gap-2.5 text-sm animate-in shake duration-300" style={{ borderColor: '#ef4444', background: 'var(--ct-accent-red, rgba(239, 68, 68, 0.08))', color: '#ef4444' }}>
@@ -54,14 +57,18 @@ export function Register() {
             />
           )}
 
-          {isSuccess && <SuccessStatus />}
+          {/* Truyền roleType vào SuccessStatus */}
+          {isSuccess && <SuccessStatus roleType={roleType} />}
 
-          <div className="pt-2 text-center text-sm flex items-center justify-center gap-1.5" style={{ color: 'var(--ct-text)' }}>
-            <span className="opacity-70">{t('alreadyHaveAccount') || 'Already have an account?'}</span>
-            <button type="button" onClick={() => navigate('/login')} className="font-semibold hover:underline opacity-100">
-              {t('signIn') || 'Sign In'}
-            </button>
-          </div>
+          {/* Ẩn luôn phần link Login bên dưới nếu đăng ký thành công (tuỳ chọn, nhưng thường UX sẽ ẩn) */}
+          {!isSuccess && (
+            <div className="pt-2 text-center text-sm flex items-center justify-center gap-1.5" style={{ color: 'var(--ct-text)' }}>
+              <span className="opacity-70">{t('alreadyHaveAccount') || 'Already have an account?'}</span>
+              <button type="button" onClick={() => navigate('/login')} className="font-semibold hover:underline opacity-100">
+                {t('signIn') || 'Sign In'}
+              </button>
+            </div>
+          )}
 
         </div>
       </div>

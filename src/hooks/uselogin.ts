@@ -41,15 +41,15 @@ export function useLogin() {
     return () => clearInterval(timer);
   }, [resendCountdown]);
 
-  const processLogin = (userEmail: string, userPwd?: string) => {
+  const processLogin = (loginIdentifier: string, userPwd?: string) => {
     setError(null);
     setIsLoading(true);
 
     setTimeout(() => {
-      const account = mockAccounts.find(
-        acc => acc.email.toLowerCase() === userEmail.trim().toLowerCase()
-      ) as Account | undefined;
-
+      const account = mockAccounts.find(acc => 
+        acc.email.toLowerCase() === loginIdentifier.trim().toLowerCase() ||
+        (acc.username && acc.username.toLowerCase() === loginIdentifier.trim().toLowerCase())
+      );
       if (account) {
         if (account.status === 'inactive') {
           setError('errorAccountInactive');
@@ -62,7 +62,11 @@ export function useLogin() {
         } else if (account.status === 'setup_required') {
           setCurrentAcc(account);
           setView('setup');
-        } else {
+        } else if (account.type === 'admin') {
+          setCurrentAcc(account);
+          setOtpValue('');
+          setView(account.has2FA ? 'login_2fa' : 'setup_2fa'); 
+        }else {
           setCurrentAcc(account);
           setOtpValue('');
           setOtpMethod('email');
@@ -123,23 +127,33 @@ export function useLogin() {
 
   const handleVerify2FA = (e: React.FormEvent) => {
     e.preventDefault();
-    if (otpValue.length < 6) return;
-    
-    setIsOtpLoading(true);
-    setOtpError(null);
-
-    setTimeout(() => {
-      if (otpValue === '000000') {
-        setOtpError('errorOtpExpired');
-        setIsOtpLoading(false);
-      } else if (otpValue === '111111') {
-        setOtpError('errorOtpInvalid');
-        setIsOtpLoading(false);
-      } else if (currentAcc) {
-        setRole(currentAcc.type as 'owner' | 'issuer' | 'verifier' | 'admin');
-        navigate(`/${currentAcc.type}`);
+    if (currentAcc?.type === 'admin') {
+      if (otpValue === '676767') {
+        setRole('admin');
+        navigate('/admin');
+      } else {
+        setOtpError('errorTotpInvalid');
       }
-    }, 1500);
+      setIsOtpLoading(false);
+    } else {
+      if (otpValue.length < 6) return;
+      
+      setIsOtpLoading(true);
+      setOtpError(null);
+      
+      setTimeout(() => {
+        if (otpValue === '000000') {
+          setOtpError('errorOtpExpired');
+          setIsOtpLoading(false);
+        } else if (otpValue === '111111') {
+          setOtpError('errorOtpInvalid');
+          setIsOtpLoading(false);
+        } else if (currentAcc) {
+          setRole(currentAcc.type as 'owner' | 'issuer' | 'verifier' | 'admin');
+          navigate(`/${currentAcc.type}`);
+        }
+      }, 1500);
+    }
   };
 
   const handleResendOTP = () => {

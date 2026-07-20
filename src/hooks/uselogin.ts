@@ -41,7 +41,7 @@ export function useLogin() {
     return () => clearInterval(timer);
   }, [resendCountdown]);
 
-  const processLogin = (loginIdentifier: string, userPwd?: string) => {
+  const processLogin = (loginIdentifier: string, _userPwd?: string) => {
     setError(null);
     setIsLoading(true);
 
@@ -62,7 +62,7 @@ export function useLogin() {
         } else if (account.status === 'setup_required') {
           setCurrentAcc(account);
           setView('setup');
-        } else if (account.type === 'admin') {
+        } else if (account.type === 'admin' || account.type === 'super') {
           setCurrentAcc(account);
           setOtpValue('');
           setView(account.has2FA ? 'login_2fa' : 'setup_2fa'); 
@@ -127,14 +127,13 @@ export function useLogin() {
 
   const handleVerify2FA = (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentAcc?.type === 'admin') {
+    if (currentAcc?.type === 'super' || currentAcc?.type === 'admin') {
       if (otpValue === '676767') {
-        setRole('admin');
-        navigate('/admin');
+        setRole(currentAcc.type);
+        navigate(currentAcc.type === 'super' ? '/super' : '/admin');
       } else {
-        setOtpError('errorTotpInvalid');
+        setOtpError(t('errorOtpInvalid') || 'Invalid TOTP code.');
       }
-      setIsOtpLoading(false);
     } else {
       if (otpValue.length < 6) return;
       

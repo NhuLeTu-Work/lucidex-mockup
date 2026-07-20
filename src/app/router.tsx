@@ -9,6 +9,7 @@ import { OwnerPortal } from '../pages/OwnerPortal';
 import { IssuerPortal } from '../pages/IssuerPortal';
 import { VerifierPortal } from '../pages/VerifierPortal';
 import { AdminPortal } from '../pages/AdminPortal';
+import { SuperAdminPortal } from '@/pages/SuperAdminPortal';
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: '/owner', element: <ProtectedRoute allowedRole="owner"><OwnerPortal /></ProtectedRoute> },
       { path: '/issuer', element: <ProtectedRoute allowedRole="issuer"><IssuerPortal /></ProtectedRoute> },
       { path: '/verifier', element: <ProtectedRoute allowedRole="verifier"><VerifierPortal /></ProtectedRoute> },
+      { path: '/super', element: <ProtectedRoute allowedRole="super"><SuperAdminPortal /></ProtectedRoute> },
       { path: '/admin', element: <ProtectedRoute allowedRole="admin"><AdminPortal /></ProtectedRoute> },
     ],
   },

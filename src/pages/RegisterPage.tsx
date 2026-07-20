@@ -11,7 +11,7 @@ export function Register() {
   const navigate = useNavigate();
   const hookProps = useRegister();
   const {
-    roleType, handleRoleChange, error, fieldErrors, isLoading, isSuccess,
+    roleType, handleRoleChange, errorKey, missingFieldKeys, fieldErrors, isLoading, isSuccess,
     bizData, certificate, setCertificate, handleBizChange, handleBizRegister,
     showOtpModal, setShowOtpModal, otpValue, setOtpValue, otpError,
     isOtpLoading, handleVerifyOTP, getSubtitle, email, t
@@ -34,10 +34,12 @@ export function Register() {
             />
           )}
 
-          {error && (
+          {errorKey && (
             <div className="p-3.5 rounded-xl border flex items-start gap-2.5 text-sm animate-in shake duration-300" style={{ borderColor: '#ef4444', background: 'var(--ct-accent-red, rgba(239, 68, 68, 0.08))', color: '#ef4444' }}>
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
-              <span className="font-medium text-balance">{error}</span>
+              <span className="font-medium text-balance">{errorKey === 'errorMissingFields'
+        ? `${t('errorMissingFields')} ${missingFieldKeys.map(k => t(k)).join(', ')}.`
+        : t(errorKey)}</span>
             </div>
           )}
 

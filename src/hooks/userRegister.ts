@@ -22,6 +22,9 @@ export function useRegister() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // state
+  const [errorKey, setErrorKey] = useState<string | null>(null);
+  const [missingFieldKeys, setMissingFieldKeys] = useState<string[]>([]);
 
   // Trạng thái Form Issuer / Verifier
   const [bizData, setBizData] = useState<BusinessData>({
@@ -55,39 +58,31 @@ export function useRegister() {
 
   const handleOwnerRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorKey(null);
 
     if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
-      setError(t('errorFieldsRequired') || 'Vui lòng điền đầy đủ thông tin.');
+      setErrorKey('errorFieldsRequired');
       return;
     }
     if (password !== confirmPassword) {
-      setError(t('errorPasswordMismatch') || 'Password and Confirm Password do not match.');
+      setErrorKey('errorPasswordMismatch');
       return;
     }
     if (!validatePassword(password)) {
-      setError(t('errorWeakPassword') || 'Password must contain at least 8 characters...');
+      setErrorKey('errorWeakPassword');
       return;
     }
 
     setIsLoading(true);
     setTimeout(() => {
-      // Kiểm tra user có tồn tại trong mockData không
       const existingUser = mockAccounts.find(acc => acc.email.toLowerCase() === email.trim().toLowerCase());
-      
+
       if (existingUser) {
-        if (existingUser.authProvider === 'google') {
-          // AC 9: Nhập form bằng email đã đăng ký qua Google
-          setError(t('errorEmailExistsGoogle') || 'This email is already registered via Google. Please log in using Google.');
-        } else {
-          // AC 4: Nhập form bằng email đã đăng ký bằng Password
-          setError(t('errorEmailExists') || 'This email is already registered.');
-        }
+        setErrorKey(existingUser.authProvider === 'google' ? 'errorEmailExistsGoogle' : 'errorEmailExists');
         setIsLoading(false);
-        return; // Dừng lại, không gửi OTP
+        return;
       }
 
-      // Nếu email chưa tồn tại -> Thành công, mở OTP Modal
       setIsLoading(false);
       setShowOtpModal(true);
       setOtpValue('');
@@ -96,41 +91,36 @@ export function useRegister() {
   };
 
   const handleGoogleRegister = () => {
-    // Giả lập OAuth popup lấy được email (để test AC, ta lấy tạm giá trị user đã nhập ở ô email)
-    const googleEmail = email.trim(); 
-    
-    if (!googleEmail) {
-      setError(t('errorFieldsRequired') || 'Please enter an email to test Google Signup.');
-      return;
-    }
+  const googleEmail = email.trim();
 
-    setError(null);
-    setIsLoading(true);
+  if (!googleEmail) {
+    setErrorKey('errorFieldsRequired');
+    return;
+  }
 
-    setTimeout(() => {
-      const existingUser = mockAccounts.find(acc => acc.email.toLowerCase() === googleEmail.toLowerCase());
-      
-      if (existingUser) {
-        if (existingUser.authProvider === 'password' || !existingUser.authProvider) {
-          // AC 10: Bấm nút Google nhưng email này trước đó đã đăng ký bằng Password
-          setError(t('errorEmailExistsPassword') || 'This email is already registered with a password. Please log in using your email and password.');
-          setIsLoading(false);
-          return;
-        }
-        
-        // Nếu user đã tồn tại và authProvider === 'google', thì cho đăng nhập luôn
+  setErrorKey(null);
+  setIsLoading(true);
+
+  setTimeout(() => {
+    const existingUser = mockAccounts.find(acc => acc.email.toLowerCase() === googleEmail.toLowerCase());
+
+    if (existingUser) {
+      if (existingUser.authProvider === 'password' || !existingUser.authProvider) {
+        setErrorKey('errorEmailExistsPassword');
         setIsLoading(false);
-        setRole('owner');
-        navigate('/owner');
         return;
       }
-
-      // Nếu user hoàn toàn mới -> Đăng ký Google thành công (Thường OAuth Google không cần OTP nữa)
       setIsLoading(false);
       setRole('owner');
       navigate('/owner');
-    }, 800);
-  };
+      return;
+    }
+
+    setIsLoading(false);
+    setRole('owner');
+    navigate('/owner');
+  }, 800);
+};
 
   const handleVerifyOTP = () => {
     if (!otpValue.trim()) return;
@@ -158,61 +148,51 @@ export function useRegister() {
 
   const handleBizRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorKey(null);
+    setMissingFieldKeys([]);
     setFieldErrors({});
 
-    const missingFields: string[] = [];
-    const requiredKeys = roleType === 'verifier' 
+    const missingKeys: string[] = [];
+    const requiredKeys = roleType === 'verifier'
       ? ['orgName', 'taxCode', 'address', 'legalRep', 'email', 'phone', 'regName', 'regTitle', 'certificate']
       : ['orgName', 'taxCode', 'address', 'legalRep', 'email', 'phone', 'regName'];
 
+    const fieldLabelMap: Record<string, string> = {
+      orgName: roleType === 'verifier' ? 'lblOrgName' : 'lblInstName',
+      taxCode: 'lblTaxCode',
+      address: 'lblAddress',
+      legalRep: 'lblLegalRep',
+      email: 'lblContactGmail',
+      phone: 'lblContactPhone',
+      regName: 'lblRegName',
+      regTitle: 'lblRegTitle',
+      certificate: 'uploadCert',
+    };
+
     requiredKeys.forEach(key => {
       if (key === 'certificate') {
-        if (!certificate) missingFields.push(t('uploadCert') || 'Business registration certificate');
-      } else {
-        if (!bizData[key as keyof BusinessData].trim()) {
-          const fieldLabelMap: Record<string, string> = {
-            orgName: roleType === 'verifier' ? 'lblOrgName' : 'lblInstName',
-            taxCode: 'lblTaxCode',
-            address: 'lblAddress',
-            legalRep: 'lblLegalRep',
-            email: 'lblContactGmail',
-            phone: 'lblContactPhone',
-            regName: 'lblRegName',
-            regTitle: 'lblRegTitle',
-          };
-          missingFields.push(t(fieldLabelMap[key]) || key);
-        }
+        if (!certificate) missingKeys.push(fieldLabelMap.certificate);
+      } else if (!bizData[key as keyof BusinessData].trim()) {
+        missingKeys.push(fieldLabelMap[key]);
       }
     });
 
-    if (missingFields.length > 0) {
-      setError(`${t('errorMissingFields') || 'Please fill in the following required field(s):'} ${missingFields.join(', ')}.`);
+    if (missingKeys.length > 0) {
+      setErrorKey('errorMissingFields');
+      setMissingFieldKeys(missingKeys);
       return;
     }
 
     const fErrors: Record<string, string> = {};
-    if (bizData.orgName.length < 3 || bizData.orgName.length > 200) {
-      fErrors.orgName = t('fmtTextLength') || 'Text, 3–200 characters';
-    }
-    if (!/^\d{10}$/.test(bizData.taxCode)) {
-      fErrors.taxCode = t('fmtTaxCode') || 'Exactly 10 digits';
-    }
-    if (!/^[\p{L}\s]+$/u.test(bizData.legalRep)) {
-      fErrors.legalRep = t('fmtLettersOnly') || 'Text, letters only';
-    }
-    if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(bizData.email)) {
-      fErrors.email = t('fmtGmail') || 'Valid email format (e.g. name@gmail.com)';
-    }
-    if (!/^(0[3|5|7|8|9])+([0-9]{8})$/.test(bizData.phone)) {
-      fErrors.phone = t('fmtPhone') || '10-digit Vietnamese phone number';
-    }
-    if (!/^[\p{L}\s]+$/u.test(bizData.regName)) {
-      fErrors.regName = t('fmtLettersOnly') || 'Text, letters only';
-    }
+    if (bizData.orgName.length < 3 || bizData.orgName.length > 200) fErrors.orgName = 'fmtTextLength';
+    if (!/^\d{10}$/.test(bizData.taxCode)) fErrors.taxCode = 'fmtTaxCode';
+    if (!/^[\p{L}\s]+$/u.test(bizData.legalRep)) fErrors.legalRep = 'fmtLettersOnly';
+    if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(bizData.email)) fErrors.email = 'fmtGmail';
+    if (!/^(0[3|5|7|8|9])+([0-9]{8})$/.test(bizData.phone)) fErrors.phone = 'fmtPhone';
+    if (!/^[\p{L}\s]+$/u.test(bizData.regName)) fErrors.regName = 'fmtLettersOnly';
 
     if (Object.keys(fErrors).length > 0) {
-      setFieldErrors(fErrors);
+      setFieldErrors(fErrors); // giá trị đã là key sẵn, giữ nguyên tên biến cho gọn
       return;
     }
 
@@ -232,7 +212,7 @@ export function useRegister() {
   };
 
   return {
-    roleType, handleRoleChange, error, fieldErrors, isLoading, isSuccess,
+    roleType, handleRoleChange,  errorKey, missingFieldKeys, fieldErrors, isLoading, isSuccess,
     email, setEmail, password, setPassword, confirmPassword, setConfirmPassword,
     showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword,
     bizData, certificate, setCertificate, handleBizChange, handleBizRegister,

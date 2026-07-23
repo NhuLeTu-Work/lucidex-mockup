@@ -4,6 +4,7 @@ import { SuperAdminSidebar } from '../components/super/SuperAdminSidebar';
 import { AdminAccountsTab } from '../components/super/AdminAccountsTab';
 import { AuditLogTab } from '../components/super/AuditLogTab';
 import { CreateAdminModal } from '../components/super/CreateAdminModal';
+import { AdminResetRequestTab } from '../components/super/AdminResetRequests';
 
 export function SuperAdminPortal() {
   const { t } = useApp();
@@ -28,6 +29,7 @@ export function SuperAdminPortal() {
             onOpenCreate={() => handleCreateAdmin()}
           />
         )}
+        {activeTab === 'admin_requests' && <AdminResetRequestTab t={t} />}
         {activeTab === 'audit' && <AuditLogTab t={t} logs={auditLogs} />}
       </main>
 

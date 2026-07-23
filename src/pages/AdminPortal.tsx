@@ -10,8 +10,7 @@ import { useAdminRequests } from '../hooks/admin/userAdminRequests';
 import { AdminSidebarDesktop, AdminSidebarMobile } from '../components/admin/AdminSidebar';
 import { AdminDashboard } from '../components/admin/AdminDashboard';
 import { AdminRequests } from '../components/admin/AdminRequests';
-import { AdminAccounts } from '../components/admin/AdminAccounts';
-
+import { AdminAccount } from '@/components/admin/AdminAccount';
 // Modals
 import { RequestDetailModal } from '../components/admin/RequestDetailModal';
 import { RejectReasonModal } from '../components/admin/RejectReasonModal';
@@ -47,8 +46,8 @@ export function AdminPortal() {
             onSelectReq={setSelectedReq} t={t}
           />
         )}
+        {activeTab === 'settings' && <AdminAccount t={t}/>}
         
-        {activeTab === 'accounts' && <AdminAccounts t={t} accounts={accounts} />}
       </main>
 
       {/* --- Modals Render --- */}

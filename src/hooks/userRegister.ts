@@ -166,7 +166,7 @@ export function useRegister() {
       phone: 'lblContactPhone',
       regName: 'lblRegName',
       regTitle: 'lblRegTitle',
-      certificate: 'uploadCert',
+      certificate: roleType === 'verifier' ? 'businessLicense' : 'certIssuer',
     };
 
     requiredKeys.forEach(key => {
@@ -190,7 +190,13 @@ export function useRegister() {
     if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(bizData.email)) fErrors.email = 'fmtGmail';
     if (!/^(0[3|5|7|8|9])+([0-9]{8})$/.test(bizData.phone)) fErrors.phone = 'fmtPhone';
     if (!/^[\p{L}\s]+$/u.test(bizData.regName)) fErrors.regName = 'fmtLettersOnly';
-
+    if (certificate) {
+      if (certificate.type !== 'application/pdf') {
+        fErrors.certificate = 'errorInvalidFormat';
+      } else if (certificate.size >= 10 * 1024 * 1024) {
+        fErrors.certificate = 'errorFileTooLarge';
+      }
+    }
     if (Object.keys(fErrors).length > 0) {
       setFieldErrors(fErrors); // giá trị đã là key sẵn, giữ nguyên tên biến cho gọn
       return;
@@ -212,7 +218,7 @@ export function useRegister() {
   };
 
   return {
-    roleType, handleRoleChange,  errorKey, missingFieldKeys, fieldErrors, isLoading, isSuccess,
+    roleType, handleRoleChange,  errorKey, setErrorKey, missingFieldKeys, fieldErrors, isLoading, isSuccess,
     email, setEmail, password, setPassword, confirmPassword, setConfirmPassword,
     showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword,
     bizData, certificate, setCertificate, handleBizChange, handleBizRegister,

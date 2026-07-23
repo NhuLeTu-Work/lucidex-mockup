@@ -193,7 +193,7 @@ export const en: Record<string, string> = {
     errorInvalidCredentials: 'Invalid email or password.',
     loginTitle: 'Welcome back!',
     loginSubtitle: 'Sign in to access your workspace.',
-    emailAddress: 'Email or Username',
+    emailAddress: 'Email',
     password: 'Password',
     forgotPassword: 'Forgot password?',
     signIn: 'Sign In',
@@ -345,4 +345,6 @@ export const en: Record<string, string> = {
     actor: 'Actor',
     target: 'Target',
     noAuditLogsFound: 'No audit logs found.',
+    errorInvalidFormat: 'Only PDF files are allowed.',
+    errorFileTooLarge: 'File size must be strictly less than 10MB.',
 };

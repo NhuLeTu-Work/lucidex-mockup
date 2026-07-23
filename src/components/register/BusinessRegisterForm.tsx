@@ -12,10 +12,12 @@ interface BusinessFormProps {
   handleBizChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBizRegister: (e: React.FormEvent) => void;
   t: (k: string) => string;
+  setErrorKey: (k: string | null) => void;
 }
 
 export function BusinessRegisterForm({
-  roleType, bizData, fieldErrors, isLoading, certificate, setCertificate, handleBizChange, handleBizRegister, t
+  roleType, bizData, fieldErrors, isLoading, certificate, setCertificate, handleBizChange,
+  handleBizRegister, t, setErrorKey
 }: BusinessFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +38,7 @@ export function BusinessRegisterForm({
           style={{ background: 'var(--ct-bg)', borderColor: fieldErrors[name] ? '#ef4444' : 'var(--ct-border)', color: 'var(--ct-text)' }}
         />
       </div>
-      {fieldErrors[name] && <span className="text-[11px] text-red-500 font-medium ml-1 animate-in slide-in-from-top-1">{fieldErrors[name]}</span>}
+      {fieldErrors[name] && <span className="text-[11px] text-red-500 font-medium ml-1 animate-in slide-in-from-top-1">{t(fieldErrors[name])}</span>}
     </div>
   );
 
@@ -70,11 +72,30 @@ export function BusinessRegisterForm({
             type="file" 
             ref={fileInputRef} 
             className="hidden" 
-            accept=".pdf,.jpg,.jpeg,.png"
+            accept=".pdf" 
             onChange={(e) => {
-              if (e.target.files?.[0]) {
-                setCertificate(e.target.files[0]);
-                if (fieldErrors['certificate']) fieldErrors['certificate'] = '';
+              const file = e.target.files?.[0];
+              if (file) {
+                // Ràng buộc định dạng PDF
+                if (file.type !== 'application/pdf') {
+                  e.target.value = ''; // Không nhận file
+                  setCertificate(null); // Reset file
+                  setErrorKey('errorInvalidFormat'); // <=== Đẩy lỗi lên banner cha
+                  return;
+                }
+                
+                // Ràng buộc size < 10MB
+                if (file.size >= 10 * 1024 * 1024) {
+                  e.target.value = ''; // Không nhận file
+                  setCertificate(null); // Reset file
+                  setErrorKey('errorFileTooLarge'); // <=== Đẩy lỗi lên banner cha
+                  return;
+                }
+
+                // Nếu hợp lệ
+                setCertificate(file);
+                setErrorKey(null); // Xóa lỗi ở banner cha đi (nếu đang có)
+                if (fieldErrors['certificate']) delete fieldErrors['certificate'];
               }
             }}
           />

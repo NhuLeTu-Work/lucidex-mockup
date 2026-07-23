@@ -14,7 +14,7 @@ export function Register() {
     roleType, handleRoleChange, errorKey, missingFieldKeys, fieldErrors, isLoading, isSuccess,
     bizData, certificate, setCertificate, handleBizChange, handleBizRegister,
     showOtpModal, setShowOtpModal, otpValue, setOtpValue, otpError,
-    isOtpLoading, handleVerifyOTP, getSubtitle, email, t
+    isOtpLoading, handleVerifyOTP, getSubtitle, email, t, setErrorKey
   } = hookProps;
 
   return (
@@ -56,6 +56,7 @@ export function Register() {
               handleBizChange={handleBizChange} 
               handleBizRegister={handleBizRegister} 
               t={t} 
+              setErrorKey={setErrorKey}
             />
           )}
 

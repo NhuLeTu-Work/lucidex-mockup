@@ -180,7 +180,7 @@ export const vi: Record<string, string> = {
     errorInvalidCredentials: 'Email hoặc mật khẩu không hợp lệ',
     loginTitle: 'Chào mừng trở lại!',
     loginSubtitle: 'Đăng nhập để truy cập không gian làm việc của bạn.',
-    emailAddress: 'Email hoặc Username',
+    emailAddress: 'Email',
     password: 'Mật khẩu',
     forgotPassword: 'Quên mật khẩu?',
     signIn: 'Đăng nhập',
@@ -329,4 +329,6 @@ export const vi: Record<string, string> = {
     actor: 'Người thực hiện',
     target: 'Đối tượng',
     noAuditLogsFound: 'Không tìm thấy nhật ký nào.',
+    errorInvalidFormat: 'Chỉ chấp nhận định dạng file PDF.',
+    errorFileTooLarge: 'Kích thước file phải nhỏ hơn 10MB.',
 };
